@@ -10,9 +10,9 @@ const api = new Spotify({
     redirectUri: 'http://localhost:3000/callback'
 });
 
-const token = 'BQDSK1-bZZX6Ex1t2rpJiCH9Yefh706A6RwcM_fnD_DZwnxQBAwCKR-rzVmvWjSdFeX7LN6UwA72db0YBb3fLZHaeNwmb7m1rR4S_Cb9SEfvacAeM0B5UZ96d2R5UQSJ5n5xZtsjeOdm1Gm5B9Zkllv984_qM3fpNWxR2OgQNjTQ1Ja4TUXMxgZ9aePJ5wqn5y5cxLLADV2PkiiFU4H6oNPmtd50aat_rv0g';
+const token = 'BQBfuNTmbR-iZYml6y2cYCD2zkABsKBZgYNPSR5EySG02ZWFTZzCuwDnXi_gpJE4Ga-fKAcd1iZjYEtdfapeK8Aztmc2YK55aIMVX0cW3EzFfZfQJQeV0MUaa4VvceK3bxW8hxnlxhNOYWj0fhSigzV9-IgJCUVnOuIJm-S20NBIxoLMgr9iG0CmN8aOPl7ZppG9lB72FQQ_oUR-9Px4Z4J46Y36nlJL43bE';
 
-const formattrack = (res) => {
+const formattrack = (res) => {//used in other format()'s
     return {
         name: res.name,
         duration: res.duration_ms,
@@ -22,26 +22,67 @@ const formattrack = (res) => {
     };
 };
 
-const formatalbum = (res) => {
+const formatalbum = (res) => {//for /album
+    const tracks = [];
+    res.tracks.items.forEach(el => {
+        tracks.push({//no image bcz all the same
+            name: el.name,
+            duration: el.duration_ms,
+            id: el.id,
+            artist: el.artists[0].name,
+        });
+    });
     return {
         name: res.name,
         id: res.id,
         artist: res.artists[0].name,
+        tracks: tracks,
+        image: res.images[0].url
+    };
+};
+
+const formatplaylist = (res) => {//for /playlist
+    const tracks = [];
+    res.tracks.items.forEach(el => {
+        tracks.push(formattrack(el.track));
+    });
+    return {
+        name: res.name,
+        id: res.id,
+        owner: res.owner.display_name,
+        tracks: tracks,
         image: res.images[0].url
     };
 };
 
 const formatsearch = (res) => {
-    const songs = [];
-    res.forEach(val => {
-        songs.push({
-            id: val.videoId,
-            title: val.title,
-            image: val.image,
-            artist: val.author.name
+    const trs = [];
+    res.tracks.items.forEach(el => {
+        trs.push(formattrack(el));
+    });
+    const pls = [];
+    res.playlists.items.forEach(el => {
+        pls.push({//                      !!!! NO TRACKS
+            name: el.name,
+            owner: el.owner.display_name,
+            image: el.images[0].url,
+            id: el.id
         });
     });
-    return songs;
+    const als = [];
+    res.albums.items.forEach(el => {
+        als.push({//                      !!!! NO TRACKS
+            name: el.name,
+            id: el.id,
+            artist: el.artists[0].name,
+            image: el.images[0].url
+        });
+    });
+    return {
+        tracks: trs,
+        playlists: pls,
+        albums: als
+    }
 }
 
 const formatlikedpls = (res) => {
@@ -91,9 +132,21 @@ app.get('/callback', (req, res) => {
 });
 
 app.get('/search/:term', async (req, res) => {
-    const { videos } = await search(req.params.term);
-    console.log(videos);
-    res.send(formatsearch(videos));
+    api.setAccessToken(token);
+    const data = await api.search(req.params.term, ['track', 'playlist', 'album'], { limit: 20 });
+    res.json(formatsearch(data.body));
+});
+
+app.get('/playlist/:id', async (req, res) => {
+    api.setAccessToken(token);
+    const data = await api.getPlaylist(req.params.id);
+    res.json(formatplaylist(data.body));
+});
+
+app.get('/album/:id', async (req, res) => {
+    api.setAccessToken(token);
+    const data = await api.getAlbum(req.params.id);
+    res.json(formatalbum(data.body));
 });
 
 app.get('/yt/:id', (req, res) => {
