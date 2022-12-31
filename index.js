@@ -10,8 +10,6 @@ const api = new Spotify({
     redirectUri: 'http://localhost:3000/callback'
 });
 
-const token = 'BQBfuNTmbR-iZYml6y2cYCD2zkABsKBZgYNPSR5EySG02ZWFTZzCuwDnXi_gpJE4Ga-fKAcd1iZjYEtdfapeK8Aztmc2YK55aIMVX0cW3EzFfZfQJQeV0MUaa4VvceK3bxW8hxnlxhNOYWj0fhSigzV9-IgJCUVnOuIJm-S20NBIxoLMgr9iG0CmN8aOPl7ZppG9lB72FQQ_oUR-9Px4Z4J46Y36nlJL43bE';
-
 const formattrack = (res) => {//used in other format()'s
     return {
         name: res.name,
@@ -127,24 +125,24 @@ app.get('/login', (req, res) => {
 app.get('/callback', (req, res) => {
     api.authorizationCodeGrant(req.query.code).then(({ body }) => {
         console.log(`tokens:\n${body.access_token}\n${body.refresh_token}`);
-        res.send(`authorized ${body.access_token}`);
+        res.send(body.access_token);
     });
 });
 
-app.get('/search/:term', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/search/:term', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.search(req.params.term, ['track', 'playlist', 'album'], { limit: 20 });
     res.json(formatsearch(data.body));
 });
 
-app.get('/playlist/:id', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/playlist/:id', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.getPlaylist(req.params.id);
     res.json(formatplaylist(data.body));
 });
 
-app.get('/album/:id', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/album/:id', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.getAlbum(req.params.id);
     res.json(formatalbum(data.body));
 });
@@ -155,8 +153,8 @@ app.get('/yt/:id', (req, res) => {
         .on('finish', () => res.download(`${req.params.id}.mp3`));
 });
 
-app.get('/spot/:id', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/spot/:id', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.getTrack(req.params.id);
     const str = `${data.body.name} ${data.body.artists[0].name}`;
     console.log(str);
@@ -170,26 +168,26 @@ app.get('/spot/:id', async (req, res) => {
         .on('finish', () => res.download(`${id}.mp3`));
 });
 
-app.get('/me', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/me', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.getMe();
     res.json({ name: data.body.display_name, image: data.body.images[0].url });
 });
 
-app.get('/usertrs', async (req, res) => {//liked tracks
-    api.setAccessToken(token);
+app.get('/:token/usertrs', async (req, res) => {//liked tracks
+    api.setAccessToken(req.params.token);
     const data = await api.getMySavedTracks({ limit: 50 });
     res.json(formatusertrs(data.body));
 });
 
-app.get('/userpls', async (req, res) => {//this has all the playlists(made + following)
-    api.setAccessToken(token);
+app.get('/:token/userpls', async (req, res) => {//this has all the playlists(made + following)
+    api.setAccessToken(req.params.token);
     const data = await api.getUserPlaylists({ limit: 50 });
     res.json(formatlikedpls(data.body));
 });
 
-app.get('/userals', async (req, res) => {
-    api.setAccessToken(token);
+app.get('/:token/userals', async (req, res) => {
+    api.setAccessToken(req.params.token);
     const data = await api.getMySavedAlbums({ limit: 50 });
     res.json(formatuserals(data.body));
 });
