@@ -129,7 +129,7 @@ app.get('/login', (req, res) => {
 app.get('/callback', (req, res) => {
     api.authorizationCodeGrant(req.query.code).then(({ body }) => {
         console.log(`tokens:\n${body.access_token}\n${body.refresh_token}`);
-        res.send(`<h1>Access granted, You can now close this tab</h1><script>localStorage.setItem('token', ${body.access_token})</script>`);
+        res.send(`<h1>Access granted, You can now close this tab</h1><script>localStorage.setItem('token', '${body.access_token}')</script>`);
 
     });
 });
