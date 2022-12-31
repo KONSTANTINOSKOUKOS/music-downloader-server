@@ -1,4 +1,8 @@
-const app = require('express')();
+const cors = require('cors');
+const express = require('express');
+const app = express(cors({
+    origin: '*'
+}));
 const { search } = require('yt-search');
 const ytdl = require('ytdl-core');
 const Spotify = require('spotify-web-api-node');
