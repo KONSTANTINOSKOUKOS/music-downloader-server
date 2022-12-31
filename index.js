@@ -1,6 +1,6 @@
 const cors = require('cors');
-const express = require('express');
-const app = express(cors({
+const app = require('express')();
+app.use(cors({
     origin: '*'
 }));
 const { search } = require('yt-search');
