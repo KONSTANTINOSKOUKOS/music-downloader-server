@@ -124,7 +124,7 @@ const formatuserals = (res) => {
 
 
 app.get('/login', (req, res) => {
-    res.redirect(api.createAuthorizeURL(['playlist-read-private', 'user-read-private', 'user-library-read'], 'state'));
+    res.send(api.createAuthorizeURL(['playlist-read-private', 'user-read-private', 'user-library-read'], 'state'));
 });
 app.get('/callback', (req, res) => {
     api.authorizationCodeGrant(req.query.code).then(({ body }) => {
