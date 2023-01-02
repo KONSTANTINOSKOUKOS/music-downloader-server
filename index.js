@@ -127,6 +127,7 @@ app.get('/login', (req, res) => {
     res.send(api.createAuthorizeURL(['playlist-read-private', 'user-read-private', 'user-library-read'], 'state'));
 });
 app.get('/token/:code', (req, res) => {
+    api.setRedirectURI('https://music-downloader-pi.vercel.app/login');
     api.authorizationCodeGrant(req.params.code).then(({ body }) => {
         console.log(`tokens:\n${body.access_token}\n${body.refresh_token}`);
         res.json({
