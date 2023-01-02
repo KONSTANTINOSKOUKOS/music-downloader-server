@@ -137,6 +137,17 @@ app.get('/token/:code', (req, res) => {
     });
 });
 
+app.get('/refresh/:refresh', (req, res) => {
+    api.refreshAccessToken().then(({ body }) => {
+        console.log(`tokens:\n${body.access_token}\n${body.refresh_token}`);
+        res.json({
+            token: body.access_token,
+            refresh: body.refresh_token,
+            expire: body.expires_in
+        });
+    })
+});
+
 app.get('/:token/search/:term', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.search(req.params.term, ['track', 'playlist', 'album'], { limit: 20 });
