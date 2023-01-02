@@ -126,10 +126,14 @@ const formatuserals = (res) => {
 app.get('/login', (req, res) => {
     res.send(api.createAuthorizeURL(['playlist-read-private', 'user-read-private', 'user-library-read'], 'state'));
 });
-app.get('/callback', (req, res) => {
-    api.authorizationCodeGrant(req.query.code).then(({ body }) => {
+app.get('/token/:code', (req, res) => {
+    api.authorizationCodeGrant(req.params.code).then(({ body }) => {
         console.log(`tokens:\n${body.access_token}\n${body.refresh_token}`);
-        res.send(`<h1>Access granted, You can now close this tab</h1><script>window.spotify = '${body.access_token}';window.postMessage('${body.access_token}','*');</script>`);
+        res.json({
+            token: body.access_token,
+            refresh: body.refresh_token,
+            expire: body.expires_in
+        });
     });
 });
 
