@@ -1,7 +1,7 @@
 const cors = require('cors');
 const app = require('express')();
 
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://music-downloader-pi.vercel.app' }));
 
 const { search } = require('yt-search');
 const ytdl = require('ytdl-core');
