@@ -11,7 +11,7 @@ const { createWriteStream } = require('fs');
 const api = new Spotify({
     clientId: '05b24fb8ffde41c384ac3d5b54f97cf2',
     clientSecret: '55eb2f966f0d401493f46a1c3c7b7ddd',
-    redirectUri: 'https://music-downloader-pi.vercel.app/callback'
+    redirectUri: 'https://music-downloader-pi.vercel.app/login'
 });
 
 const formattrack = (res) => {//used in other format()'s
