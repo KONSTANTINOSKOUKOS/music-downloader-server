@@ -188,7 +188,7 @@ app.get('/:token/spot/:id', async (req, res) => {
         .on('finish', () => res.download(`${id}.mp3`));
 });
 
-app.get('/:token/me', async (req, res) => {
+app.get('/:token/me', cors({ origin: 'https://music-downloader-pi.vercel.app' }), async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getMe();
     res.json({ name: data.body.display_name, image: data.body.images[0].url });
