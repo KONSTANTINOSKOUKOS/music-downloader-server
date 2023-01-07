@@ -215,4 +215,4 @@ app.get('/:token/userals', async (req, res) => {
 
 app.listen(3000, () => console.log('app listening'));
 
-module.exports = app;
+// module.exports = app;
