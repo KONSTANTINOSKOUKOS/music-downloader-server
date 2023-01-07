@@ -214,3 +214,5 @@ app.get('/:token/userals', cors({ origin: '*' }), async (req, res) => {
 });
 
 app.listen(3000, () => console.log('app listening'));
+
+module.exports = app;
