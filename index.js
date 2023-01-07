@@ -1,3 +1,4 @@
+const Spotify = require('spotify-web-api-node');
 const app = require('express')();
 
 const cors = require('cors');
@@ -5,7 +6,6 @@ app.use(cors({ origin: '*' }));
 
 const { search } = require('yt-search');
 const ytdl = require('ytdl-core');
-const Spotify = require('spotify-web-api-node');
 const { createWriteStream } = require('fs');
 
 const api = new Spotify({
