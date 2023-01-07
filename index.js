@@ -213,6 +213,10 @@ app.get('/:token/userals', async (req, res) => {
     res.json(formatuserals(data.body));
 });
 
+app.get('/', (req, res) => {
+    res.send('<h1>music-downloader-server</h1>');
+})
+
 app.listen(3000, () => console.log('app listening'));
 
-// module.exports = app;
+module.exports = app;
