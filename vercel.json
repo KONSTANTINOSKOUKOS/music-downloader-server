@@ -1,15 +1,17 @@
 {
     "version": 2,
+    "buildCommand": "node index.js",
+    "installCommand": "npm install",
     "builds": [
-      {
-        "src": "index.js",
-        "use": "@now/node"
-      }
+        {
+            "src": "index.js",
+            "use": "@now/node"
+        }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "index.js"
-      }
+        {
+            "src": "/(.*)",
+            "dest": "index.js"
+        }
     ]
-  }
+}
