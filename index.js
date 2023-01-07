@@ -191,7 +191,7 @@ app.get('/:token/spot/:id', async (req, res) => {
 app.get('/:token/me', cors({ origin: '*' }), async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getMe();
-    const image = data.body.images[0].url;
+    const image = data.body.images[0]?.url;
     res.json(image ? { name: data.body.display_name, image: image } : { name: data.body.display_name });
 });
 
