@@ -149,19 +149,19 @@ app.get('/refresh/:refresh', (req, res) => {
     })
 });
 
-app.get('/:token/search/:term', cors({ origin: '*' }), async (req, res) => {
+app.get('/:token/search/:term', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.search(req.params.term, ['track', 'playlist', 'album'], { limit: 20 });
     res.json(formatsearch(data.body));
 });
 
-app.get('/:token/playlist/:id', cors({ origin: '*' }), async (req, res) => {
+app.get('/:token/playlist/:id', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getPlaylist(req.params.id);
     res.json(formatplaylist(data.body));
 });
 
-app.get('/:token/album/:id', cors({ origin: '*' }), async (req, res) => {
+app.get('/:token/album/:id', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getAlbum(req.params.id);
     res.json(formatalbum(data.body));
@@ -188,26 +188,26 @@ app.get('/:token/spot/:id', async (req, res) => {
         .on('finish', () => res.download(`${id}.mp3`));
 });
 
-app.get('/:token/me', cors({ origin: '*' }), async (req, res) => {
+app.get('/:token/me', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getMe();
     const image = data.body.images[0]?.url;
     res.json(image ? { name: data.body.display_name, image: image } : { name: data.body.display_name });
 });
 
-app.get('/:token/usertrs', cors({ origin: '*' }), async (req, res) => {//liked tracks
+app.get('/:token/usertrs', async (req, res) => {//liked tracks
     api.setAccessToken(req.params.token);
     const data = await api.getMySavedTracks({ limit: 50 });
     res.json(formatusertrs(data.body));
 });
 
-app.get('/:token/userpls', cors({ origin: '*' }), async (req, res) => {//this has all the playlists(made + following)
+app.get('/:token/userpls', async (req, res) => {//this has all the playlists(made + following)
     api.setAccessToken(req.params.token);
     const data = await api.getUserPlaylists({ limit: 50 });
     res.json(formatlikedpls(data.body));
 });
 
-app.get('/:token/userals', cors({ origin: '*' }), async (req, res) => {
+app.get('/:token/userals', async (req, res) => {
     api.setAccessToken(req.params.token);
     const data = await api.getMySavedAlbums({ limit: 50 });
     res.json(formatuserals(data.body));
